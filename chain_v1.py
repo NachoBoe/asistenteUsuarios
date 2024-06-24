@@ -51,7 +51,6 @@ def remover_tildes(input_str):
 
 embeddings = AzureOpenAIEmbeddings(model="text-embedding-ada-002")
 
-
 index_name = "usuarios2"
 credential = AzureKeyCredential(os.environ["AZURE_AI_SEARCH_API_KEY"])
 endpoint = "https://bantotalsearchai.search.windows.net"
