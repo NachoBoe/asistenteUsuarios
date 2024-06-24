@@ -1,0 +1,17 @@
+langsmith
+langchain_core
+langchain
+langchain_community
+langchain_openai
+langchain_anthropic
+dill
+pyprojroot
+flask
+python-dotenv
+chromadb==0.3.29
+fastapi
+uvicorn
+pymongo
+azure-search
+azure-search-documents
+azure-identity
