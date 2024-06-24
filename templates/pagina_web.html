@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente >Bantotal</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; display: flex; overflow: auto;height:90vh; max-height: 90vh;}
+        #content {
+            flex-grow: 1;
+            overflow-y: auto;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+            margin-top: 0;
+        }
+        
+
+        /* Parte de arriba */
+
+        .top-section {
+            background-color: #d6d6d6;
+            height: 12%;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para la barra superior */
+            padding: 10px 0; /* Añadir padding vertical */
+        }
+
+        .header {
+            display: flex;
+            align-items: center; /* Alineación vertical */
+            justify-content: space-between; /* Espacio entre elementos */
+            width: 90%; /* Reducir el ancho para un mejor margen */
+            max-width: 1200px; /* Limitar el ancho máximo */
+            padding: 0 20px;
+        }
+
+        #newChatButton {
+            cursor: pointer;
+            background-color: #ff8787;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 50px; /* Ajustar tamaño */
+            height: 50px; /* Ajustar tamaño */
+            font-size: 30px; /* Ajustar tamaño */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px; /* Espacio entre el botón y el título */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+        }
+
+        #newChatButton:hover {
+            background-color: #c62828; /* Color al pasar el ratón */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Sombra al pasar el ratón */
+        }
+
+        h2 {
+            margin: 0;
+            cursor: default;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .pregunta-btn {
+            position: relative;
+            background-color: #f0f0f0; /* Color de fondo suave */
+            border: none;
+            border-radius: 20px; /* Bordes redondeados */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .select-container {
+            position: relative;
+        }
+
+        #versionSelect {
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #versionSelect:hover {
+            border-color: #007bff;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        /* Chat  */
+        #chat {
+            height: 70%;
+            overflow-y: auto;
+            background-color: #ffffff;
+            padding: 10px;
+            margin: 5px auto;
+            width: 90%;
+            border: 1px solid #ffffff;
+            border-radius: 15px;
+            text-align: left;
+        }
+
+        #chat::-webkit-scrollbar {
+            width: 12px; /* Ancho de la barra de desplazamiento */
+        }
+        .message-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px; /* Incrementar el margen inferior para más espacio entre mensajes */
+            position: relative; /* Para que el feedback button se posicione relativamente al contenedor */
+            align-items: flex-start; /* Alinear verticalmente los elementos al inicio */
+        }
+        .message-container.user {
+            justify-content: flex-end;
+        }
+
+        .message {
+            min-width: 150px;
+            max-width: 80%;
+            padding: 15px;
+            border-radius: 15px;
+            word-wrap: break-word;
+            display: inline-block;
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            position: relative;
+            font-family: 'Roboto', sans-serif; /* Cambiar a la fuente Roboto */
+            font-size: 16px; /* Ajustar el tamaño de la letra */
+            line-height: 1.4; /* Ajustar el espaciado entre líneas */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+            transition: transform 0.3s ease;
+            color: #333; /* Color del texto */
+        }
+
+        .message:hover {
+            transform: translateY(-2px); /* Efecto de elevación al pasar el ratón */
+        }
+
+        .user .message {
+            background-color: #ff8787;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .agent .message {
+            background-color: #ededed;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .agent .message-container {
+            display: flex;
+            align-items: flex-start; /* Alinear verticalmente al inicio */
+        }
+
+        .agent .avatar {
+            width: 40px; /* Ajusta según necesidad */
+            height: 40px; /* Ajusta según necesidad */
+            border-radius: 50%;
+            margin-right: 10px; /* Espacio entre el logo y el mensaje */
+            border: 2px solid #000; /* Borde negro */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+        }
+
+        .agent .message {
+            flex-grow: 1; /* Permitir que el mensaje ocupe el espacio restante */
+        }
+
+
+        /* Botones de retroalimentación */
+
+            .feedback-button-menu {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 14%;
+            font-size: 18px;
+            background: transparent;
+            border: none;
+            color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        .feedback-options {
+            position: absolute;
+            top: 0%;
+            right:  5%;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none; /* Hidden by default */
+            z-index: 1000;
+        }
+
+        .feedback-options span {
+            display: block;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #444;
+            transition: background-color 0.3s;
+        }
+
+        .feedback-options span:hover {
+            background-color: #f0f0f0;
+        }
+
+        .feedback-box {
+            display: block;
+            width: 30px; /* Adjust as needed */
+            height: 30px; /* Adjust as needed */
+            font-size: 14px;
+            border: none; /* No border */
+            border-radius: 5px;
+            padding: 5px;
+            box-sizing: border-box;
+            resize: none;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .feedback-container {
+            background-color: transparent; /* Invisible background */
+            border: none; /* No border */
+            box-shadow: none; /* No shadow */
+            padding: 0;
+            width: auto;
+            position: absolute;
+        }
+        /* Barra mensaje */
+
+        #message-container {
+            position: relative;
+            width: 90%;
+            margin: 20px auto; /* Centrar horizontalmente */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #message {
+            border-radius: 30px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 90%; /* Añadir espacio para el botón de enviar */
+            height: auto;
+            display: block;
+            outline: none;
+            resize: none;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-size: 16px;
+            line-height: 1.3;
+            margin-right: 10px; /* Añadir margen a la derecha */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+            padding-right: 6%;
+            padding-left: 4%;
+            max-height: 150px;
+            overflow-y: auto; 
+        }
+
+
+        #message::-webkit-scrollbar {
+            width: 8px; /* Ancho de la barra de desplazamiento */
+        }
+
+        #message::-webkit-scrollbar-thumb {
+            background: #888; /* Color del "pulgar" de la barra de desplazamiento */
+            border-radius: 4px; /* Bordes redondeados del "pulgar" */
+        }
+
+        #message::-webkit-scrollbar-thumb:hover {
+            background: #555; /* Color del "pulgar" al pasar el ratón por encima */
+        }
+
+
+        #message:focus {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #sendButton {
+            cursor: pointer;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 35px; /* Reducir tamaño */
+            height: 35px; /* Reducir tamaño */
+            position: absolute;
+            right: 7%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        #sendButton:hover {
+            background-color: #ff6347; /* Usar un rojo pastel */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .sendIcon {
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 5px;
+            transform: rotate(45deg); /* Flecha hacia arriba */
+        }
+
+        .waitIcon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Estilos de codigo */
+        pre code {
+            background-color: #2e2e2e;
+            color: #f8f8f2;
+            padding: 10px;
+            display: block;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border-radius: 5px;
+        }
+        code.json {
+            color: #66d9ef; /* Cyan */
+        }
+        code.xml {
+            color: #a6e22e; /* Green */
+        }
+        .json .property {
+            color: #f92672; /* Pink */
+        }
+        .json .string {
+            color: #e6db74; /* Yellow */
+        }
+        .json .number {
+            color: #ae81ff; /* Purple */
+        }
+        .json .boolean {
+            color: #fd971f; /* Orange */
+        }
+        .json .null {
+            color: #fd971f; /* Orange */
+        }
+        .xml .tag {
+            color: #f92672; /* Pink */
+        }
+        .xml .attribute {
+            color: #e6db74; /* Yellow */
+        }
+        .xml .value {
+            color: #a6e22e; /* Green */
+        }
+     </style>
+</head>
+
+
+<body>
+    <div id="content">
+        <div class="top-section">
+            <div class="header">
+                <button id="newChatButton">+</button>
+                <h2><img src="static/logoBT.png" alt="Bantotal Logo" width="300" height="auto"> </h2>
+                <div class="select-container">
+                    <select id="versionSelect" onchange="selectVersion()">
+                        <option value="2">Version 2</option>
+                        <option value="1">Version 1</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="chat"></div>
+        <div id="message-container">
+            <textarea id="message" rows="1" autofocus oninput="adjustHeight()" placeholder="Escribe tu pregunta..."></textarea>
+            <div id="sendButton" onclick="sendMessage()">
+                <i id="sendIcon" class="sendIcon"></i>
+            </div>
+        </div>
+    </div>
+    <script>
+        let awaitingResponse = false;
+
+        document.getElementById('newChatButton').addEventListener('click', function() {
+            fetch('/new_chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({tabId: tabId}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Muestra la respuesta del servidor, por ejemplo, para depuración
+                var chat = document.getElementById('chat');
+                chat.innerHTML = ''; // Esto borrará el contenido del chat
+            })
+            .catch(error => console.error('Error al iniciar un nuevo chat:', error));
+        });
+
+ 
+        function adjustHeight() {
+            var message = document.getElementById('message');
+            var scrollPosition = window.scrollY;
+            message.style.height = 'auto';
+            message.style.height = (message.scrollHeight+10)+ 'px';
+        }
+
+        let tabId = sessionStorage.getItem('tabId');
+        if (!tabId) {
+            tabId = Date.now().toString() + Math.random().toString();
+            sessionStorage.setItem('tabId', tabId);
+        }
+        function sendMessage() {
+            if (awaitingResponse) return;
+            var messageInput = document.getElementById('message');
+            var message = messageInput.value;
+            var chat = document.getElementById('chat');
+            var sendButton = document.getElementById('sendButton');
+            var sendIcon = document.getElementById('sendIcon');
+
+            if (message.trim() !== '') {
+                awaitingResponse = true;
+
+                // Añade el mensaje del usuario a la caja de chat
+                var userMessageContainer = document.createElement('div');
+                userMessageContainer.classList.add('message-container', 'user');
+                userMessageContainer.innerHTML = '<div class="message">' + escapeHTML(message).replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;') + '</div>';
+                chat.appendChild(userMessageContainer);
+                chat.scrollTop = chat.scrollHeight;
+
+                // Muestra "Respondiendo..." en el campo de mensaje y deshabilita entrada adicional
+                messageInput.value = 'Respondiendo...';
+                messageInput.disabled = true;
+                sendIcon.className = 'waitIcon';
+                sendButton.style.cursor = 'default';
+
+                // Envía el mensaje inicial al servidor
+                fetch('/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message, tabId: tabId }),
+                }).then(response => {
+                    // Aquí, iniciar EventSource tras éxito del POST inicial
+                    var eventSource = new EventSource('/stream?tabId=' + encodeURIComponent(tabId)); // Usar una nueva ruta, por ejemplo, '/stream'
+                    let messageContainer;
+                    let fullMessage = '';
+                    eventSource.onmessage = function (event) {
+                        const data = event.data;
+                        if (data === "done") {
+                            eventSource.close();
+                            messageContainer.innerHTML += `
+                                <button class="feedback-button-menu" onclick="toggleFeedbackOptions(this)">⋮</button>
+                                <div class="feedback-options">
+                                    <span onclick="sendFeedback('Correcto', this, true)">Correcto</span>
+                                    <span onclick="showFeedbackBox(this)">Incorrecto</span>
+                                </div>
+                            `;
+                            // Formatear el mensaje completo
+                            messageContainer.children[1].innerHTML = formatMessage(fullMessage);
+                            // Restablece UI para nueva entrada
+                            sendIcon.className = 'sendIcon';
+                            sendButton.style.cursor = 'pointer';
+                            messageInput.value = '';
+                            messageInput.disabled = false;
+                            messageInput.focus();
+                            awaitingResponse = false;
+                        } else {
+                            if (!messageContainer) {
+                                messageContainer = document.createElement('div');
+                                messageContainer.classList.add('message-container', 'agent');
+                                messageContainer.innerHTML = `
+                                    <img src="static/minilogo.png" alt="Avatar" class="avatar">
+                                    <div class="message"></div>
+                                `;
+                                chat.appendChild(messageContainer);
+                            }
+                            fullMessage += data.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\|\|/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                            messageContainer.children[1].innerHTML += data.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\|\|/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                            chat.scrollTop = chat.scrollHeight;
+                        }
+                    };
+
+                    eventSource.onerror = function (error) {
+                        console.error('EventSource failed:', error);
+                        eventSource.close();
+                    };
+
+                }).catch(error => {
+                    console.error('Error:', error);
+                    sendIcon.className = 'sendIcon';
+                    sendButton.style.cursor = 'pointer';
+                    messageInput.value = '';
+                    messageInput.disabled = false;
+                    messageInput.focus();
+                    awaitingResponse = false;
+                });
+            }
+        }
+        function formatMessage(text) {
+            // Reemplaza ### por títulos solo en la línea
+            text = text.replace(/####\s*(.+?)<br>/g, '<h4>$1</h4>');
+            text = text.replace(/##\s*(.+?)<br>/g, '<h2>$1</h2>');
+            text = text.replace(/###\s*(.+?)<br>/g, '<h3>$1</h3>');
+            // Reemplaza bloques de código JSON
+            text = text.replace(/```json<br>([\s\S]+?)<br>```/g, '<pre><code class="json">$1</code></pre>');
+            // Reemplaza bloques de código XML
+            text = text.replace(/```xml<br>([\s\S]+?)<br>```/g, '<pre><code class="xml">$1</code></pre>');
+            // Reemplaza **text** por <b>text</b>
+            text = text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+            // Reemplaza listados con <ul> y <li>
+            text = text.replace(/- (.+?)<br>/g, '<li>$1</li><br>');
+            // Encierra los <li> en <ul>
+            text = text.replace(/(<li>[\s\S]*?<\/li>)(<br>)+/g, '<ul>$1</ul>');
+            // Elimina <ul> innecesarios anidados
+            text = text.replace(/<\/ul>\s*<ul>/g, '');
+            return text;
+        }
+        let shouldCloseFeedback = true;
+
+        function toggleFeedbackOptions(button) {
+            const options = button.nextElementSibling;
+            const feedbackContainer = document.querySelector(".feedback-container");
+
+            if (options.style.display === 'block') {
+                options.style.display = 'none';
+                if (feedbackContainer) {
+                    feedbackContainer.remove();
+                }
+                document.removeEventListener('click', closeFeedbackAndMenu);
+            } else {
+                options.style.display = 'block';
+                setTimeout(() => {
+                    document.addEventListener('click', closeFeedbackAndMenu);
+                }, 0);
+            }
+        }
+
+        function showFeedbackBox(button) {
+            let existingFeedbackBox = document.querySelector(".feedback-container");
+            if (existingFeedbackBox) {
+                existingFeedbackBox.remove();
+            }
+
+            let feedbackContainer = document.createElement("div");
+            feedbackContainer.classList.add("feedback-container");
+            feedbackContainer.style.position = 'absolute';
+            feedbackContainer.style.width = 'auto';
+            feedbackContainer.style.height = 'auto';
+            feedbackContainer.style.zIndex = '1000';
+
+            let feedbackBox = document.createElement("textarea");
+            feedbackBox.classList.add("feedback-box");
+            feedbackBox.placeholder = "Cuéntame más...";
+            feedbackBox.style.width = '100px';
+            feedbackBox.style.height = '50px';
+
+            feedbackBox.addEventListener('keydown', function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    sendFeedback(feedbackBox.value, button, false);
+                    feedbackContainer.remove();
+                    button.parentNode.style.display = 'none';
+                }
+            });
+
+            feedbackContainer.appendChild(feedbackBox);
+            document.body.appendChild(feedbackContainer);
+
+            const rect = button.getBoundingClientRect();
+            feedbackContainer.style.left = `${rect.left}px`;
+            feedbackContainer.style.top = `${rect.bottom + window.scrollY}px`;
+
+            feedbackBox.focus();
+
+            shouldCloseFeedback = false;
+            setTimeout(() => {
+                shouldCloseFeedback = true;
+            }, 0);
+
+            setTimeout(() => {
+                document.addEventListener('click', closeFeedbackAndMenu);
+            }, 0);
+        }
+
+        function sendFeedback(feedbackText, button, isPositive) {
+            fetch('/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ feedback: feedbackText, positive: isPositive, tabId: tabId }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                const feedbackOptions = button.closest('.feedback-options');
+                if (feedbackOptions) {
+                    feedbackOptions.style.display = 'none';
+                }
+                const feedbackContainer = document.querySelector(".feedback-container");
+                if (feedbackContainer) {
+                    feedbackContainer.remove();
+                }
+            })
+            .catch(error => console.error('Error:', error.message));
+        }
+
+        function closeFeedbackAndMenu(event) {
+            const feedbackOptions = document.querySelector('.feedback-options');
+            const feedbackContainer = document.querySelector('.feedback-container');
+
+            if (shouldCloseFeedback) {
+                if (feedbackOptions && !feedbackOptions.contains(event.target) && !event.target.classList.contains('feedback-button-menu')) {
+                    feedbackOptions.style.display = 'none';
+                }
+
+                if (feedbackContainer && !feedbackContainer.contains(event.target)) {
+                    feedbackContainer.remove();
+                }
+
+                document.removeEventListener('click', closeFeedbackAndMenu);
+            }
+        }
+
+        function escapeHTML(text) {
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+
+        function selectVersion() {
+            var selectElement = document.getElementById('versionSelect');
+            var selectedVersion = selectElement.options[selectElement.selectedIndex].value;
+            fetch('/select_version', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({version: selectedVersion, tabId: tabId}),
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+
+
+        document.getElementById('message').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        window.onload = adjustHeight;
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            const eventChange = new Event('change');
+            selectElement.dispatchEvent(eventChange);
+        });
+        selectVersion();
+    </script>
+</body>
+</html>
